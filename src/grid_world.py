@@ -71,6 +71,8 @@ class GridWorld():
         
     def _get_next_state_and_reward(self, state, action):
         x, y = state
+        # print('state:', state)
+        # print('action:', action)
         new_state = tuple(np.array(state) + np.array(action))
         if y + 1 > self.env_size[1] - 1 and action == (0,1):    # down
             y = self.env_size[1] - 1

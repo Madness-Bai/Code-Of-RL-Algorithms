@@ -1,14 +1,20 @@
 import sys
 import os
+
+# Add the project root directory to the Python path
+sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../..')))
+
 import numpy as np
+
 from examples.arguments import args
 from src.grid_world import GridWorld
 
-def MC_Basic(env,num_episodes=50,discount_factor=0.9):
+def MC_Basic(env,num_episodes=100,discount_factor=0.9):
     V = np.zeros(env.num_states)
-    policy = np.zeros((env.num_states, len(env.action_space)), dtype=int)
-    policy[:, 0] = 1
-    for e in range(2000):
+    # policy = np.zeros((env.num_states, len(env.action_space)), dtype=int)
+    # policy[:, 0] = 1
+    policy = np.eye(5)[np.random.randint(0, 5, size=(env.env_size[0] * env.env_size[1]))]
+    for e in range(1000):
         for s in range (env.num_states):
             state = (s% env.env_size[0], s//env.env_size[0])
             q=[]
@@ -40,12 +46,43 @@ if __name__ == "__main__":
         if isinstance(env, GridWorld):
             env.render()
             print("policy_matrix",policy_matrix)
+            
+            # Define the expected converged policy matrix
+            expected_policy = np.array([
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [0., 1., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [0., 1., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [0., 1., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [0., 1., 0., 0., 0.],
+                [1., 0., 0., 0., 0.],
+                [0., 1., 0., 0., 0.],
+                [0., 1., 0., 0., 0.],
+                [0., 1., 0., 0., 0.],
+                [0., 1., 0., 0., 0.],
+                [0., 0., 0., 0., 1.]
+            ])
+            
+            # Check if policy has converged
+            if np.array_equal(policy_matrix, expected_policy):
+                print("Policy has converged to the expected optimal policy!")
+            
             env.add_policy(policy_matrix)
             env.add_state_values(values)
             # Render the environment
             env.render(animation_interval=2)
         
 # 很神奇，最后还是没有收敛到所有状态都达到最优策略
-
-               
-

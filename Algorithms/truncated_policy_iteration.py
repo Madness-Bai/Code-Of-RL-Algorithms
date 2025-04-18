@@ -52,6 +52,7 @@ if __name__ == "__main__":
     policy_matrix, values = policy_iteration(env)
     if isinstance(env, GridWorld):
         env.render()
+        print("policy_matrix", policy_matrix)
         env.add_policy(policy_matrix)
         env.add_state_values(values)
         # Render the environment
